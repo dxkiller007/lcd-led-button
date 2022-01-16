@@ -1,0 +1,48 @@
+#include <LiquidCrystal_I2C.h>
+LiquidCrystal_I2C lcd(0x27, 16, 2);
+
+#define LED_PIN 7
+#define BUTTON_PIN 6
+int i = 0;
+int delayValue;
+
+
+void setup() {
+   Serial.begin(9600);
+  pinMode(BUTTON_PIN, INPUT_PULLUP);
+  pinMode(LED_PIN, OUTPUT);
+   lcd.init(); // initialize the lcd
+  lcd.backlight();
+
+  lcd.setCursor(0, 0);         // move cursor to   (0, 0)
+  lcd.print("Delay value :");        // print message at (0, 0)
+}
+
+
+void loop() {
+     
+  int buttonState;
+  buttonState = digitalRead(BUTTON_PIN);
+
+  if (i == 12) {
+    i = 0;
+  }
+
+  if (buttonState == HIGH) {
+    i++;
+  }
+  lcd.clear();
+  lcd.setCursor(2,0);
+   lcd.print("Delay value :");
+  delayValue = map(i, 0, 12, 1000, 100);
+  Serial.println(delayValue);
+  digitalWrite(LED_PIN, HIGH);
+  delay(delayValue);
+  digitalWrite(LED_PIN, LOW);
+  delay(delayValue);
+
+   lcd.setCursor(2, 1);  //Move cursor to character 2 on line 1
+    lcd.print(delayValue);
+    delay(150);
+  
+}
